@@ -1,0 +1,19 @@
+body {
+	margin: 0;
+	overflow: hidden;
+}
+
+
+#playground {
+	background-color: red;
+}
+
+
+#histogram {
+	background-color: blue;
+}
+
+
+#qsphere {
+	background-color: green;
+}
