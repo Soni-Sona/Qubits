@@ -5,15 +5,26 @@ body {
 
 
 #playground {
-	background-color: red;
+	height: 80vh;
+	width: 100%;
+	background-color: black;
 }
 
 
 #histogram {
-	background-color: blue;
+	background-color: #eef;
 }
 
 
 #qsphere {
-	background-color: green;
+	background-color: #efe;
 }
+
+
+#levelText {
+	height: 20vh;
+	position: absolute;
+	bottom: 0;
+	z-index: 1;
+}
+
