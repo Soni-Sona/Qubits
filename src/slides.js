@@ -25,7 +25,7 @@ export let slides = [
 		"Coucou",
 		3,
 		[gates.gateX, gates.gateH, gates.gateT, gates.gateCNOT],
-		"simulate many",
+		"undo-redo",
 		true
 	),
 ];

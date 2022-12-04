@@ -6,6 +6,7 @@ import "./playground/interaction.js";
 
 
 export let qubits = null;
+export let measurementStep;
 
 
 function initializeLevel(qubitCount, availableGates) {
@@ -22,7 +23,12 @@ function loadSlide(slideId) {
 		initializeLevel(slide.qubitCount, slide.availableGates);
 	}
 
+	measurementStep = slide.measurementStep;
+
 	document.getElementById("levelText").innerText = slide.text;
+	document.getElementById("undoRedo").style.display = "none";
+	document.getElementById("simulate").style.display = "none";
+	document.getElementById("histogram").style.display = measurementStep === "none" ? "none" : "initial";
 }
 
 

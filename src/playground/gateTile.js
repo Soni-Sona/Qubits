@@ -44,7 +44,7 @@ const gateTileParameters = {
 	},
 
 	[gates.gateCNOT]: {
-		name: "CN",
+		name: "CX",
 		color: "#4f4",
 		textColor: "#000"
 	},

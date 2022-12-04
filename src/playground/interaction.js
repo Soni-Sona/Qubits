@@ -1,7 +1,10 @@
-import { qubits as physicalQubits } from "../index.js";
+import {
+	qubits as physicalQubits,
+	measurementStep
+} from "../index.js";
 import { canvas } from "./canvas.js";
 import { triggerAnimation as triggerAnimationPlayground } from "./playground.js";
-import { triggerAnimation as triggerAnimationHistogram } from "../histogram.js";
+import { triggerAnimation as triggerAnimationHistogram, initializeHistogram, addMeasurement } from "../histogram.js";
 import {
 	qubits,
 	Qubit,
@@ -15,6 +18,8 @@ import {
 import { gateTiles, GateTile, createDraggedTile, removeDraggedTile } from "./gateTile.js"
 import * as gates from "../gates.js";
 export default null;
+
+const epsilon = 1e-4;
 
 let gatesOnTwoQubits = [
 	gates.gateCNOT,
@@ -34,6 +39,83 @@ let currentTouchId = null;
  * "waitingQubit2"; for gates acting on two qubits
  */
 let state = "none";
+
+
+let savedPhysicalQubits;
+let undoCount = 0;
+let maxUndoCount = 4;
+
+function savePhysicalQubits() {
+	savedPhysicalQubits = physicalQubits.copy();
+}
+
+function loadSavedPhysicalQubits() {
+	physicalQubits.coefficients = savedPhysicalQubits.coefficients;
+	physicalQubits.computeProbabilites();
+	physicalQubits.computeCorrelated();
+}
+
+function checkAllCollapsed() {
+	for (let i = 0; i < physicalQubits.coefficients.rows; i++) {
+		if (physicalQubits.coefficients.data[i][0].getSquaredNorm() >= 1 - epsilon) {
+			addMeasurement(i);
+			return true;
+		}
+	}
+	return false;
+}
+
+function showUndoButton() {
+	if (measurementStep !== "undo-redo" && measurementStep !== "simulate many") return;
+	if (undoCount >= maxUndoCount || measurementStep === "simulate many") {
+		document.getElementById("simulate").style.display = "initial";
+	} else {
+		document.getElementById("undoRedo").style.display = "initial";
+	}
+}
+
+document.getElementById("undoRedo").onclick = () => {
+	undoCount ++;
+	document.getElementById("undoRedo").style.display = "none";
+	loadSavedPhysicalQubits();
+	updateGraphicalQubitProbabilities();
+	triggerAnimationHistogram();
+	savePhysicalQubits();
+};
+
+let simulateDom = document.getElementById("simulate");
+let timeout = null;
+let timeInterval = 50;
+
+simulateDom.onclick = () => {
+	if (simulateDom.innerText === "Stop") {
+		simulateDom.innerText = "Simulate many times";
+		clearInterval(timeout);
+
+	} else {
+		simulateDom.innerText = "Stop";
+		loop();
+	}
+};
+
+function loop() {
+	timeout = setTimeout(() => {
+		for (let i = 0; i < physicalQubits.qubitCount; i++) {
+			physicalQubits.observeState(i);
+		}
+		checkAllCollapsed();
+		updateGraphicalQubitProbabilities();
+		triggerAnimationHistogram();
+
+		timeout = setTimeout(() => {
+			loadSavedPhysicalQubits();
+			updateGraphicalQubitProbabilities();
+			triggerAnimationHistogram();
+			savePhysicalQubits();
+			loop();
+		}, timeInterval);
+	}, timeInterval);
+}
 
 
 function findClosest(x, y, qubitsOnly) { // returns Qubit or gateTile
@@ -75,6 +157,7 @@ function touchStart(event) {
 						console.log("Clicked on " + closest.name);
 						physicalQubits.observeState(closest.index);
 						updateGraphicalQubitProbabilities();
+						if (checkAllCollapsed()) showUndoButton();
 
 						break;
 
@@ -83,11 +166,13 @@ function touchStart(event) {
 						selectedQubits.push(closest);
 						console.log("Clicked on 2nd qubit " + closest.name);
 						physicalQubits.applyGate(
-							currentGate(...selectedQubits.map(q => q.index))
+							currentGate(...selectedQubits.reverse().map(q => q.index))
 						);
 						updateGraphicalQubitProbabilities();
 						unhighlightAllPairs();
 						showPairBetweenQubits(...selectedQubits);
+						savePhysicalQubits();
+						if (measurementStep !== "histogram") initializeHistogram();
 						state = "none";
 						draggedGateTile = null;
 						currentGate = null;
@@ -165,6 +250,8 @@ function touchEnd(event) {
 						physicalQubits.applyGate(currentGate(closest.index));
 						updateGraphicalQubitProbabilities();
 						currentGate = null;
+						savePhysicalQubits();
+						if (measurementStep !== "histogram") initializeHistogram();
 						state = "none";
 					}
 

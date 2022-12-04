@@ -45,6 +45,22 @@ body {
 }
 
 
+#measure {
+	position: absolute;
+	bottom: 20vh;
+	left: 0;
+	margin: 5px;
+}
+
+#undoRedo {
+	display: none;
+}
+
+#simulate {
+	display: none;
+}
+
+
 #levelText {
 	height: 20vh;
 	width: 100%;

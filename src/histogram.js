@@ -1,4 +1,4 @@
-import { qubits } from "./index.js";
+import { qubits, measurementStep } from "./index.js";
 export let canvas = document.getElementById("histogram");
 export let ctx = canvas.getContext("2d");
 
@@ -24,12 +24,24 @@ window.addEventListener("resize", resize);
 
 
 let histogram = [];
+let measurements = [];
+let measurementCount = 0;
+
+
+export function addMeasurement(stateIndex) {
+	measurements[stateIndex] ++;
+	measurementCount ++;
+}
 
 
 export function initializeHistogram() {
 	histogram.length = qubits.coefficients.rows;
 	histogram.fill(0);
-	histogram[0] = 1;
+
+	measurements.length = qubits.coefficients.rows;
+	measurements.fill(0);
+	measurementCount = 0;
+
 	triggerAnimation();
 }
 
@@ -60,7 +72,14 @@ export function triggerAnimation() {
 
 function update() {
 	for (let i = 0; i < histogram.length; i++) {
-		let target = qubits.getStateProbability(i.toString(2).padStart(qubits.qubitCount, "0"));
+		let target;
+
+		if (measurementStep === "histogram") {
+			target = qubits.getStateProbability(i.toString(2).padStart(qubits.qubitCount, "0"));
+		} else {
+			target = measurements[i] / (measurementCount || 1);
+		}
+
 		let diff = target - histogram[i];
 		if (diff > epsilon || diff < -epsilon) needAnimating = true;
 		histogram[i] += animationStiffness * diff;
@@ -76,10 +95,11 @@ function draw() {
 
 	// bars
 	ctx.fillStyle = colorOne;
+	ctx.strokeStyle = colorZero;
 	for (let i = 0; i < histogram.length; i++) {
 		if (histogram[i] <= epsilon) continue;
 
-		ctx.fillRect(
+		ctx[measurementStep === "histogram" ? "fillRect" : "strokeRect"](
 			(i + 0.5 - barWidthRatio / 2) * barHorizontalSpace,
 			ctx.height - labelSize,
 			barHorizontalSpace * barWidthRatio,

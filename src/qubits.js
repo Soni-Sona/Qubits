@@ -17,6 +17,14 @@ export class Qubits {
 		this.computeCorrelated()
 	}
 
+	copy() {
+		let copy = new Qubits(this.qubitCount);
+		copy.coefficients = this.coefficients.copy();
+		copy.computeProbabilites();
+		copy.computeCorrelated();
+		return copy;
+	}
+
 	getStateProbability(state) {
 		if(typeof(state) === "string" && state.length == this.qubitCount) {
 			let index = 0;
