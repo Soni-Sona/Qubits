@@ -47,17 +47,23 @@ export class Qubits {
 
 					let coefficientIndex = 2**qubitIndex + 2**i
 					let stateProbability =
-					 this.coefficients.data[coefficientIndex][0].getSquaredNorm()
+						this.coefficients.data[coefficientIndex]
+						                      [0].getSquaredNorm()
 
-					 if(product < stateProbability - epsilon ||
+					if(product < stateProbability - epsilon ||
 						product > stateProbability + epsilon) {
 						this.correlated[qubitIndex] = true
-						break	
-					 }
+						break
+					}
 				}
 			}
 		}
 	}
 
-	// applyGate;
+	applyGate(createMatrixFunction) {
+		let matrix = createMatrixFunction(this.qubitCount)
+		this.coefficients = this.coefficients.multiply(matrix)
+		this.computeProbabilites()
+		this.computeCorrelated()
+	}
 }
