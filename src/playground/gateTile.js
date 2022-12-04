@@ -4,6 +4,7 @@ import * as gates from "../gates.js"
 let gateTileSize = 70;
 let gateTileMenuPadding = 5;
 let gateTileNameSize = 40;
+let draggedAlpha = 0.6;
 
 const gateTileParameters = {
 	[gates.gateX]: {
@@ -62,12 +63,13 @@ const gateTileParameters = {
 }
 
 
-let gateTiles = [];
-let gateMenuTiles = [];
+export let gateTiles = [];
+export let gateMenuTiles = [];
 
 
-class GateTile {
+export class GateTile {
 	constructor(gate, posX, posY, dragged) {
+		this.gate = gate;
 		for (let key of ["name", "color", "textColor"])
 			this[key] = gateTileParameters[gate][key];
 
@@ -76,7 +78,15 @@ class GateTile {
 		this.dragged = dragged;
 	}
 
+
+	update() {
+
+	}
+
+
 	draw() {
+		if (this.dragged) ctx.globalAlpha = draggedAlpha;
+
 		// tile
 		ctx.fillStyle = this.color;
 		ctx.fillRect(
@@ -88,7 +98,18 @@ class GateTile {
 
 		// text
 		ctx.fillStyle = this.textColor;
+		ctx.font = gateTileNameSize + "px sans-serif";
 		ctx.fillText(this.name, this.posX, this.posY);
+
+		if (this.dragged) ctx.globalAlpha = 1;
+	}
+
+	isInside(x, y) {
+		return (
+			   x >= this.posX - gateTileSize / 2
+			&& x <= this.posX + gateTileSize / 2
+			&& y >= this.posY - gateTileSize / 2
+			&& y <= this.posY + gateTileSize / 2);
 	}
 }
 
@@ -101,7 +122,8 @@ export function createGateTiles(availableGates) {
 		gateMenuTiles.push(new GateTile(
 			availableGates[i],
 			(gateTileSize + gateTileMenuPadding) * i + padding,
-			padding
+			padding,
+			false
 		));
 	}
 
@@ -109,13 +131,13 @@ export function createGateTiles(availableGates) {
 }
 
 
-export function drawGateTiles() {
-	ctx.font = gateTileNameSize + "px sans-serif";
-	ctx.textBaseline = "middle";
-	ctx.textAlign = "center";
+export function createDraggedTile(sourceGateTile, x, y) {
+	let newGateTile = new GateTile(sourceGateTile.gate, x, y, true);
+	gateTiles.push(newGateTile);
+	return newGateTile;
+}
 
-	for (let gateTile of gateTiles) {
-		gateTile.draw();
-	}
+export function removeDraggedTile() {
+	gateTiles.pop();
 }
 

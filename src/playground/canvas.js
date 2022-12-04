@@ -1,4 +1,4 @@
-let canvas = document.getElementById("playground");
+export let canvas = document.getElementById("playground");
 export let ctx = canvas.getContext("2d");
 
 
