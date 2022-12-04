@@ -1,6 +1,7 @@
 import { qubits as physicalQubits } from "../index.js";
 import { canvas } from "./canvas.js";
-import { triggerAnimation } from "./playground.js";
+import { triggerAnimation as triggerAnimationPlayground } from "./playground.js";
+import { triggerAnimation as triggerAnimationHistogram } from "../histogram.js";
 import {
 	qubits,
 	Qubit,
@@ -81,9 +82,9 @@ function touchStart(event) {
 						if (selectedQubits.includes(closest)) break; // qubit already selected
 						selectedQubits.push(closest);
 						console.log("Clicked on 2nd qubit " + closest.name);
-						// physicalQubits.applyGate(
-						// 	currentGate(...selectedQubits)
-						// );
+						physicalQubits.applyGate(
+							currentGate(...selectedQubits.map(q => q.index))
+						);
 						updateGraphicalQubitProbabilities();
 						unhighlightAllPairs();
 						showPairBetweenQubits(...selectedQubits);
@@ -93,6 +94,8 @@ function touchStart(event) {
 						selectedQubits = [];
 						break;
 				}
+
+				triggerAnimationHistogram();
 
 			} else if (closest instanceof GateTile) {
 				switch (state) {
@@ -125,7 +128,7 @@ function touchMove(event) {
 			case "draggingGateTile":
 				draggedGateTile.posX = x;
 				draggedGateTile.posY = y;
-				triggerAnimation();
+				triggerAnimationPlayground();
 		}
 	}
 }
@@ -159,7 +162,7 @@ function touchEnd(event) {
 						state = "waitingQubit2";
 
 					} else { // gate acting on single qubit
-						// physicalQubits.applyGate(currentGate(closest.index));
+						physicalQubits.applyGate(currentGate(closest.index));
 						updateGraphicalQubitProbabilities();
 						currentGate = null;
 						state = "none";
@@ -174,7 +177,8 @@ function touchEnd(event) {
 				removeDraggedTile();
 				draggedGateTile = null;
 				currentTouchId = null;
-				triggerAnimation();
+				triggerAnimationPlayground();
+				triggerAnimationHistogram();
 		}
 	}
 }
