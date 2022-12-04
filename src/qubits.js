@@ -1,3 +1,4 @@
+import { Complex } from './complex.js';
 import { Matrix } from './matrix.js';
 
 const epsilon = 1e-4
@@ -11,9 +12,12 @@ export class Qubits {
 
 		this.probabilities = new Float32Array(qubitCount)
 		this.correlated = new Array(qubitCount)
+
+		this.computeProbabilites()
+		this.computeCorrelated()
 	}
 
-	getStateProbability(state) {;
+	getStateProbability(state) {
 		if(typeof(state) === "string" && state.length == this.qubitCount) {
 			let index = 0;
 			for(let i = 0; i < this.qubitCount; i++) {
@@ -21,6 +25,32 @@ export class Qubits {
 			}
 
 			return this.coefficients.data[index][0].getSquaredNorm();
+		}
+	}
+
+	observeState(qubitIndex) {
+		if(typeof(qubitIndex) === "number" && qubitIndex >= 0
+			                               && qubitIndex < this.qubitCount) {
+			let probability = this.probabilities[qubitIndex]
+			let observedState = Math.random() < probability
+			
+			let renormalization = 0
+			for(let i = 0; i<2**this.qubitCount; i++) {
+				if(!(i & 2**(this.qubitCount-qubitIndex-1)) ^ !observedState) {
+					this.coefficients.data[i][0] =
+						this.coefficients.data[i][0].multiply(new Complex(0))
+				}
+				else {
+					renormalization += this.coefficients.data[i][0].getSquaredNorm()
+				}
+			}
+			for(let i = 0; i<2**this.qubitCount; i++) {
+				this.coefficients.data[i][0] =
+					this.coefficients.data[i][0].multiply(new Complex(1/renormalization**0.5))
+			}
+
+			this.computeProbabilites()
+			this.computeCorrelated()
 		}
 	}
 
@@ -66,4 +96,6 @@ export class Qubits {
 		this.computeProbabilites()
 		this.computeCorrelated()
 	}
+
+
 }
