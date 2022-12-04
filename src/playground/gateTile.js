@@ -9,25 +9,25 @@ let draggedAlpha = 0.6;
 const gateTileParameters = {
 	[gates.gateX]: {
 		name: "X",
-		color: "#4f4",
+		color: "#f62",
 		textColor: "#000"
 	},
 
 	[gates.gateY]: {
 		name: "Y",
-		color: "#4f4",
+		color: "#f62",
 		textColor: "#000"
 	},
 
 	[gates.gateZ]: {
 		name: "Z",
-		color: "#4f4",
+		color: "#f62",
 		textColor: "#000"
 	},
 
 	[gates.gateH]: {
 		name: "H",
-		color: "#4f4",
+		color: "#ff4",
 		textColor: "#000"
 	},
 
@@ -45,19 +45,19 @@ const gateTileParameters = {
 
 	[gates.gateCNOT]: {
 		name: "CX",
-		color: "#4f4",
+		color: "#68f",
 		textColor: "#000"
 	},
 
 	[gates.gateCZ]: {
 		name: "CZ",
-		color: "#4f4",
+		color: "#68f",
 		textColor: "#000"
 	},
 
 	[gates.gateSWAP]: {
 		name: "SW",
-		color: "#4f4",
+		color: "#68f",
 		textColor: "#000"
 	},
 }

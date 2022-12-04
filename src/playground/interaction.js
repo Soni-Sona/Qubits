@@ -20,6 +20,7 @@ import * as gates from "../gates.js";
 export default null;
 
 const epsilon = 1e-4;
+let qubitDiameterChange = 0.08;
 
 let gatesOnTwoQubits = [
 	gates.gateCNOT,
@@ -156,6 +157,7 @@ function touchStart(event) {
 					case "none":
 						console.log("Clicked on " + closest.name);
 						physicalQubits.observeState(closest.index);
+						closest.diameterChange -= qubitDiameterChange;
 						updateGraphicalQubitProbabilities();
 						if (checkAllCollapsed()) showUndoButton();
 
@@ -168,6 +170,7 @@ function touchStart(event) {
 						physicalQubits.applyGate(
 							currentGate(...selectedQubits.reverse().map(q => q.index))
 						);
+						closest.diameterChange -= qubitDiameterChange;
 						updateGraphicalQubitProbabilities();
 						unhighlightAllPairs();
 						showPairBetweenQubits(...selectedQubits);
@@ -238,6 +241,7 @@ function touchEnd(event) {
 				let closest = findClosest(x, y, true);
 				if (closest.isInside(x, y)) {
 					console.log(draggedGateTile.name + " dropped on " + closest.name);
+					closest.diameterChange += qubitDiameterChange;
 
 					if (gatesOnTwoQubits.includes(draggedGateTile.gate)) {
 						console.log("Waiting 2nd qubit")

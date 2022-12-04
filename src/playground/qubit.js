@@ -7,8 +7,15 @@ let qubitNameSize = 30;
 let colorStroke = "#fff";
 let colorZero = "#ddd";
 let colorOne  = "#aaf";
-let colorNone = "#777";
+let colorMask = "#000";
+let maskOpacity = 0.4;
 let nameOpacity = 0.2;
+
+let diameterStiffness = 0.08;
+let diameterDamping = 0.25;
+let probabilityStiffness = 0.2;
+let maskStiffness = 0.1;
+let epsilon = 1e-3;
 
 export let qubits = []; // list of graphical qubits
 
@@ -19,39 +26,73 @@ export class Qubit {
 		this.name = String.fromCharCode(97 + index);
 		this.posX = posX;
 		this.posY = posY;
-		this.probability = 0.0; // number or null
+		this.probability = 0.0;
+		this.correlated = false;
+
+		// for animations
+		this.diameterMul = 1;
+		this.diameterChange = 0;
+		this.shownProbability = 0.0;
+		this.maskOpacity = 0;
 	}
 
 
 	update() {
-		
+		let diffProbability = this.probability - this.shownProbability;
+		let diffMaskOpacity = (this.correlated ? maskOpacity : 0) - this.maskOpacity;
+		let diffDiameterMul = 1 - this.diameterMul;
+
+		if (Math.abs(diffProbability) > epsilon || Math.abs(diffMaskOpacity) > epsilon
+			|| Math.abs(diffDiameterMul) > epsilon || Math.abs(this.diameterChange) > epsilon) {
+			this.shownProbability += probabilityStiffness * diffProbability;
+			this.maskOpacity += maskStiffness * diffMaskOpacity;
+
+			this.diameterChange *= 1 - diameterDamping;
+			this.diameterChange += diameterStiffness * diffDiameterMul;
+			this.diameterMul += this.diameterChange;
+
+			triggerAnimation();
+		}
 	}
 
 
 	draw() {
+		let diameter = qubitDiameter * this.diameterMul;
+
 		ctx.save()
 		ctx.beginPath();
-		ctx.arc(this.posX, this.posY, qubitDiameter / 2, 0, 2 * Math.PI);
+		ctx.arc(this.posX, this.posY, diameter / 2, 0, 2 * Math.PI);
 		ctx.clip();
 
 		// background color
-		ctx.fillStyle = (this.probability === null) ? colorNone : colorZero
+		ctx.fillStyle = colorZero;
 		ctx.fillRect(
-			this.posX - qubitDiameter / 2,
-			this.posY - qubitDiameter / 2,
-			qubitDiameter,
-			qubitDiameter
+			this.posX - diameter / 2,
+			this.posY - diameter / 2,
+			diameter,
+			diameter
 		);
 
 		// probability
-		if (this.probability !== null) {
-			ctx.fillStyle = colorOne;
+		ctx.fillStyle = colorOne;
+		ctx.fillRect(
+			this.posX - diameter / 2,
+			this.posY + diameter / 2,
+			diameter,
+			- this.shownProbability * diameter
+		);
+
+		// correlated mask
+		if (this.maskOpacity >= epsilon) {
+			ctx.globalAlpha = this.maskOpacity;
+			ctx.fillStyle = colorMask;
 			ctx.fillRect(
-				this.posX - qubitDiameter / 2,
-				this.posY + qubitDiameter / 2,
-				qubitDiameter,
-				- this.probability * qubitDiameter
+				this.posX - diameter / 2,
+				this.posY - diameter / 2,
+				diameter,
+				diameter
 			);
+			ctx.globalAlpha = 1;
 		}
 
 		ctx.restore(); // remove clip
@@ -59,7 +100,7 @@ export class Qubit {
 		// stroke
 		ctx.strokeStyle = colorStroke;
 		ctx.beginPath();
-		ctx.arc(this.posX, this.posY, qubitDiameter / 2, 0, 2 * Math.PI);
+		ctx.arc(this.posX, this.posY, diameter / 2, 0, 2 * Math.PI);
 		ctx.stroke();
 
 		// // name
@@ -82,12 +123,8 @@ export class Qubit {
 export function updateProbabilities() {
 	for (let i = 0; i < qubits.length; i++) {
 		let qubit = qubits[i];
-
-		if (!physicalQubits.correlated[i]) { // independent qubit, has own probability
-			qubit.probability = physicalQubits.probabilities[i];
-		} else {
-			qubit.probability = null;
-		}
+		qubit.probability = physicalQubits.probabilities[i];
+		qubit.correlated = physicalQubits.correlated[i];
 	}
 
 	triggerAnimation();

@@ -37,7 +37,7 @@ export function addMeasurement(stateIndex) {
 export function initializeHistogram() {
 	histogram.length = qubits.coefficients.rows;
 	histogram.fill(0);
-	histogram[0] = 1;
+	if (measurementStep === "histogram") histogram[0] = 1;
 
 	measurements.length = qubits.coefficients.rows;
 	measurements.fill(0);

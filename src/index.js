@@ -27,8 +27,11 @@ function loadSlide(slideId) {
 
 	document.getElementById("levelText").innerHTML = slide.text;
 	document.getElementById("undoRedo").style.display = "none";
-	document.getElementById("simulate").style.display = "none";
 	document.getElementById("histogram").style.display = measurementStep === "none" ? "none" : "initial";
+
+	let simulateDom = document.getElementById("simulate");
+	simulateDom.style.display = "none";
+	if (simulateDom.innerText === "Stop") simulateDom.onclick();
 }
 
 
