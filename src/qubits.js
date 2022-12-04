@@ -33,7 +33,7 @@ export class Qubits {
 			                               && qubitIndex < this.qubitCount) {
 			let probability = this.probabilities[qubitIndex]
 			let observedState = Math.random() < probability
-			
+
 			let renormalization = 0
 			for(let i = 0; i<2**this.qubitCount; i++) {
 				if(!(i & 2**(this.qubitCount-qubitIndex-1)) ^ !observedState) {
@@ -75,10 +75,13 @@ export class Qubits {
 					let qubitProbability = this.probabilities[qubitIndex]
 					let product = this.probabilities[i]*qubitProbability
 
-					let coefficientIndex = 2**(this.qubitCount-qubitIndex-1) + 2**(this.qubitCount-i-1)
-					let stateProbability =
-						this.coefficients.data[coefficientIndex]
-						                      [0].getSquaredNorm()
+					let stateProbability = 0
+					for(let k = 0; k<2**this.qubitCount; k++) {
+						if((k & 2**(this.qubitCount-qubitIndex-1)) > 0
+						&& (k & 2**(this.qubitCount-i-1)) > 0) {
+							stateProbability += this.coefficients.data[k][0].getSquaredNorm()
+						}
+					}
 
 					if(product < stateProbability - epsilon ||
 						product > stateProbability + epsilon) {
