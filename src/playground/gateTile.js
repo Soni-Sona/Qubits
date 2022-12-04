@@ -2,7 +2,7 @@ import { ctx } from "./canvas.js";
 import * as gates from "../gates.js"
 
 let gateTileSize = 70;
-let gateTileMenuPadding = 5;
+let gateTileMenuPadding = 15;
 let gateTileNameSize = 35;
 let draggedAlpha = 0.6;
 

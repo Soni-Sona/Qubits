@@ -14,7 +14,7 @@ class Slide {
 
 export let slides = [
 	new Slide(
-		"The aim of this project is to familiarize the layman to quantum computers. Quantum computers use an alternative concept to conventional computers to do computations, and are in undergoing development, pushed ahead by massive companies such as Google or IBM. Today, we are not going to cover why quantum computers are of such interest and what problem they can solve, but we will focussed on explaining the fundemantal principle of their working to the widest audience. ",
+		"The aim of this project is to familiarize the layman to quantum computers. Quantum computers use an alternative concept to conventional computers to do computations, and are in undergoing development, pushed ahead by massive companies such as Google or IBM. Today, we are not going to cover why quantum computers are of such interest and what problem they can solve, but we will focussed on explaining the fundemantal principles of their working to the widest audience. ",
 		0,
 		[],
 		"none",
@@ -26,15 +26,15 @@ export let slides = [
 		0,
 		[],
 		"none",
-		true
+		false
 	),
 
 	new Slide(
-		"First, we will explain briefly the fundemental principles of classic computers which we use in our daily life. Computers are computing machines, and that is all they do. To do so, they need to represent numbers physically, and the easiest way to do so is to use binary digits, also called bit. Bits are like ordinary digits from 0 to 9 we all use, except only 0 and 1 exists. This is convenient for computers who have very limited cognition abilities. A bit in a computer is typically represented by an electric signal, on for 1 and off for 0.",
+		"First, we will explain briefly the fundemental principles of classic computers which we use in our daily life. Computers are computing machines, and that is all they do. To do so, they need to represent numbers physically, and the easiest way to do so is to use binary digits, also called bits. Bits are like ordinary digits from 0 to 9 we all use, except only 0 and 1 exists. This is convenient for computers who have very limited cognition abilities. A bit in a computer is typically represented by an electric signal, on for 1 and off for 0.",
 		0,
 		[],
 		"none",
-		true
+		false
 	),
 
 	new Slide(
@@ -50,7 +50,7 @@ export let slides = [
 		1,
 		[],
 		"none",
-		true
+		false
 	),
 
 	new Slide(
@@ -62,7 +62,7 @@ export let slides = [
 	),
 
 	new Slide(
-		" Quantum computers used a variant of the bit, called the quantum bits or the qubit. Quantum bits are like regular bits except that it's possible in some circumstances that we can't know for sure if they are a 0 or a 1. We would say that they are in a superposition of both 0 and 1. This is not very illuminating. Let's see an example.",
+		" Quantum computers use a variant of the bit, called the quantum bits or the qubit. Quantum bits are like regular bits except that it's possible in some circumstances that we can't know for sure if they are a 0 or a 1. We would say that they are in a superposition of both 0 and 1. This is not very illuminating. Let's see an example.",
 		0,
 		[gates.gateX],
 		"none",
@@ -70,7 +70,7 @@ export let slides = [
 	),
 
 	new Slide(
-		"Here, we have a very simple qubit, from which we are a certain that its value is 0. Its state is fully determined and there is no superposition. In that case, we see that it shows no difference to a regular classical bit. Let's how we could make it more interesting.",
+		"Here, we have a very simple qubit, from which we are certain that its value is 0. Its state is fully determined and there is no superposition. In that case, we see that it shows no difference to a regular classical bit. Let's how we could make it more interesting.",
 		1,
 		[gates.gateX],
 		"none",
@@ -86,7 +86,7 @@ export let slides = [
 	),
 
 	new Slide(
-		"This is where a very strange part of quantum mechanics comes in: there is no way to see the qubit in two different state at the same time. If we try to watch it, or observe it, it will choose randomly what side it will take. There is no place here to discuss this subject in all this glory, so let's just try to observe the qubit.",
+		"This is where a very strange part of quantum mechanics comes in: there is no way to see the qubit in two different states at the same time. If we try to watch it, or observe it, it will choose randomly what side it will take. There is no place here to discuss this subject in all this glory, so let's just try to observe the qubit.",
 		1,
 		[gates.gateX, gates.gateH],
 		"none",
@@ -150,7 +150,7 @@ export let slides = [
 	),
 
 	new Slide(
-		"Let's try to understand what we did by doing many observations. We see that the histogram has two new entries, because there are four different outcomes to an observation. The qubits can either be both 0, both 1, 0 and 1 or 1 and 0, which we'll write 00, 01, 10, and 11.",
+		"Let's try to understand what we did by doing many observations. Do an observation on any of the qubits, and you will see that the histogram has two new entries, because there are four different outcomes to an observation. The qubits can either be both 0, both 1, 0 and 1 or 1 and 0, which we'll write 00, 01, 10, and 11.",
 		2,
 		[gates.gateX, gates.gateH, gates.gateT, gates.gateCNOT],
 		"simulate many",
@@ -170,7 +170,7 @@ export let slides = [
 		2,
 		[gates.gateX, gates.gateH, gates.gateT, gates.gateCNOT],
 		"simulate many",
-		false
+		true
 	),
 
 	new Slide(
@@ -224,6 +224,14 @@ export let slides = [
 	new Slide(
 		"There could also be cases where the correlation would only be partial, which would mean that most of the time they would both be measured to the same value, but some rarer times they could be different. We'll leave you as a challenge to find a way to make a partially correlated set of qubits.",
 		2,
+		[gates.gateX, gates.gateH, gates.gateT, gates.gateCNOT],
+		"histogram",
+		false
+	),
+
+	new Slide(
+		"You reached the end of this presentation. Feel free to play with these qubits and become a master of the quantum world.",
+		4,
 		[gates.gateX, gates.gateH, gates.gateT, gates.gateCNOT],
 		"histogram",
 		false

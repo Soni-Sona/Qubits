@@ -10,7 +10,7 @@ const qubitCenterDistance = 200;
 export function initializeLevelGraphics(qubitCount, availableGates) {
 	createQubitsAndPairs(qubitCount);
 	createGateTiles(availableGates);
-	draw();
+	triggerAnimation();
 }
 
 
@@ -64,7 +64,7 @@ function animate() {
 	draw();
 
 	animating = needAnimating;
-	if (animating) { ctx.fillStyle="white"; ctx.fillRect(0, 0, 10, 10); } // debug
+	// if (animating) { ctx.fillStyle="white"; ctx.fillRect(0, 0, 10, 10); } // debug
 	if (animating) requestAnimationFrame(animate);
 }
 

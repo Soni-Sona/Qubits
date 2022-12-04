@@ -2,19 +2,20 @@ body {
 	margin: 0;
 	overflow: hidden;
 	user-select: none;
+	background-color: #17171b;
 }
 
 
 #playground {
 	height: 80vh;
 	width: 100%;
-	background-color: black;
 }
 
 
 #histogram, #qsphere {
 	position: absolute;
 	bottom: 20vh;
+	margin-bottom: 10px;
 	height: min(20vw, 20vh);
 	width: min(20vw, 20vh);
 	z-index: 1;
@@ -22,7 +23,7 @@ body {
 
 
 #histogram {
-	right: 0;
+	right: 10px;
 	/* right: min(20vw, 20vh); */
 }
 
@@ -40,7 +41,7 @@ body {
 	position: absolute;
 	top: 0;
 	right: 0;
-	padding: 5px 6px;
+	padding: 10px;
 	font-size: 0.9em;
 }
 
@@ -63,33 +64,48 @@ body {
 
 #levelText {
 	height: 20vh;
-	width: 100%;
+	width: min(800px, 94%);
+	left: 50%;
+	transform: translate(-50%, 0);
 	position: absolute;
 	bottom: 0;
 	z-index: 1;
-	padding: 5px;
-	padding-bottom: 2em;
+	padding: 10px;
 	box-sizing: border-box;
 	overflow: auto;
+	color: white;
+	font-family: Arial;
+	font-weight: bold;
 }
 
 
 #prev, #next {
-	color: #008;
-	font-style: italic;
+	display: block;
 	position: absolute;
-	bottom: 0;
-	padding: 5px 6px;
-	font-size: 0.9em;
+	bottom: 10vh;
+	transform: translate(0, 50%);
+	width: 1.5%;
+	margin: 0 1%;
+	height: 20vh;
+	background: url(assets/arrow.svg);
+	background-size: 100% 100%;
 	z-index: 2;
-	background: rgba(255, 255, 255, 0.8);
 }
 
 #prev {
 	left: 0;
 }
 
+#prev:hover {
+	transform: translate(0, 50%) scale(1.15, 1.15);
+}
+
 #next {
 	right: 0;
+	transform: translate(0, 50%) rotate(180deg);
+}
+
+#next:hover {
+	transform: translate(0, 50%) scale(1.15, 1.15) rotate(180deg);
 }
 

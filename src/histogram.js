@@ -90,6 +90,7 @@ function update() {
 
 function draw() {
 	ctx.clearRect(0, 0, ctx.width, ctx.height);
+	if (measurementStep !== "histogram" && measurementCount == 0) return;
 
 	let barHorizontalSpace = ctx.width / histogram.length;
 	let labelSize = Math.min(barHorizontalSpace, labelSizeMax);

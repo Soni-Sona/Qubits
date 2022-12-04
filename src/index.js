@@ -2,7 +2,7 @@ import { slides } from "./slides.js";
 import { Qubits } from "./qubits.js";
 import { initializeLevelGraphics } from "./playground/playground.js";
 import { initializeHistogram } from "./histogram.js";
-import "./playground/interaction.js";
+import { savePhysicalQubits } from "./playground/interaction.js";
 
 
 export let qubits = null;
@@ -13,13 +13,14 @@ function initializeLevel(qubitCount, availableGates) {
 	qubits = new Qubits(qubitCount);
 	initializeLevelGraphics(qubitCount, availableGates);
 	initializeHistogram();
+	savePhysicalQubits();
 }
 
 
-function loadSlide(slideId) {
+function loadSlide(slideId, forceReset) {
 	let slide = slides[slideId];
 
-	if (slide.reset || slide.qubitCount != qubits.qubitCount) {
+	if (forceReset || slide.reset || slide.qubitCount != qubits.qubitCount) {
 		initializeLevel(slide.qubitCount, slide.availableGates);
 	}
 
@@ -40,7 +41,7 @@ loadSlide(currentSlide);
 
 
 document.getElementById("reset").onclick = () => {
-	loadSlide(currentSlide);
+	loadSlide(currentSlide, true);
 };
 
 
