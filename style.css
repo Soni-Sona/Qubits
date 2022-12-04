@@ -1,6 +1,7 @@
 body {
 	margin: 0;
 	overflow: hidden;
+	user-select: none;
 }
 
 
@@ -21,20 +22,55 @@ body {
 
 
 #histogram {
-	right: min(20vw, 20vh);
+	right: 0;
+	/* right: min(20vw, 20vh); */
 }
 
 
 #qsphere {
+	display: none;
 	background-color: #efe;
 	right: 0;
 }
 
 
+#reset {
+	color: #666;
+	font-style: italic;
+	position: absolute;
+	top: 0;
+	right: 0;
+	padding: 5px 6px;
+	font-size: 0.9em;
+}
+
+
 #levelText {
 	height: 20vh;
+	width: 100%;
 	position: absolute;
 	bottom: 0;
 	z-index: 1;
+	padding: 5px;
+	box-sizing: border-box;
+}
+
+
+#prev, #next {
+	color: #008;
+	font-style: italic;
+	position: absolute;
+	bottom: 0;
+	padding: 5px 6px;
+	font-size: 0.9em;
+	z-index: 2;
+}
+
+#prev {
+	left: 0;
+}
+
+#next {
+	right: 0;
 }
 

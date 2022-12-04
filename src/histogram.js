@@ -29,6 +29,7 @@ let histogram = [];
 export function initializeHistogram() {
 	histogram.length = qubits.coefficients.rows;
 	histogram.fill(0);
+	histogram[0] = 1;
 	triggerAnimation();
 }
 
