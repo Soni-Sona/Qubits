@@ -2,7 +2,10 @@ export class Complex {
 
 	constructor(real, imag) {
 		this.real = real;
-		this.imag = imag;
+		if(imag)
+			this.imag = imag;
+		else
+			this.imag = 0;
 	}
 
 	copy() {
