@@ -45,7 +45,7 @@ export class Qubits {
 					let qubitProbability = this.probabilities[qubitIndex]
 					let product = this.probabilities[i]*qubitProbability
 
-					let coefficientIndex = 2**qubitIndex + 2**i
+					let coefficientIndex = 2**(this.qubitCount-qubitIndex-1) + 2**(this.qubitCount-i-1)
 					let stateProbability =
 						this.coefficients.data[coefficientIndex]
 						                      [0].getSquaredNorm()
