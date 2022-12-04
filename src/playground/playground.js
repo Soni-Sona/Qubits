@@ -7,7 +7,7 @@ import { gateTiles, createGateTiles } from "./gateTile.js"
 const qubitCenterDistance = 200;
 
 
-export function initializeLevel(qubitCount, availableGates) {
+export function initializeLevelGraphics(qubitCount, availableGates) {
 	createQubitsAndPairs(qubitCount);
 	createGateTiles(availableGates);
 	draw();
