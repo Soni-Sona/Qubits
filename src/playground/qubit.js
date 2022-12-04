@@ -62,12 +62,12 @@ export class Qubit {
 		ctx.arc(this.posX, this.posY, qubitDiameter / 2, 0, 2 * Math.PI);
 		ctx.stroke();
 
-		// name
-		ctx.font = qubitNameSize + "px sans-serif";
-		ctx.fillStyle = "black";
-		ctx.globalAlpha = nameOpacity;
-		ctx.fillText(this.name, this.posX, this.posY);
-		ctx.globalAlpha = 1;
+		// // name
+		// ctx.font = qubitNameSize + "px sans-serif";
+		// ctx.fillStyle = "black";
+		// ctx.globalAlpha = nameOpacity;
+		// ctx.fillText(this.name, this.posX, this.posY);
+		// ctx.globalAlpha = 1;
 	}
 
 	isInside(x, y) {

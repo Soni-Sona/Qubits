@@ -3,7 +3,7 @@ import * as gates from "../gates.js"
 
 let gateTileSize = 70;
 let gateTileMenuPadding = 5;
-let gateTileNameSize = 40;
+let gateTileNameSize = 35;
 let draggedAlpha = 0.6;
 
 const gateTileParameters = {
@@ -98,7 +98,7 @@ export class GateTile {
 
 		// text
 		ctx.fillStyle = this.textColor;
-		ctx.font = gateTileNameSize + "px sans-serif";
+		ctx.font = "italic " + gateTileNameSize + "px Georgia";
 		ctx.fillText(this.name, this.posX, this.posY);
 
 		if (this.dragged) ctx.globalAlpha = 1;
