@@ -1,8 +1,9 @@
+import { triggerAnimation } from "./playground.js";
 export let canvas = document.getElementById("playground");
 export let ctx = canvas.getContext("2d");
 
 
-function resize() {
+export function resize() {
 	let scale = window.devicePixelRatio;
 	ctx.width  = canvas.clientWidth;
 	ctx.height = canvas.clientHeight;
@@ -10,8 +11,8 @@ function resize() {
 	canvas.height = ctx.height * scale;
 
 	ctx.scale(scale, scale);
+	triggerAnimation();
 }
 
-resize();
-
+window.addEventListener("resize", resize);
 

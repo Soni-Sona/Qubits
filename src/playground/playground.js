@@ -1,4 +1,4 @@
-import { ctx } from "./canvas.js";
+import { ctx, resize } from "./canvas.js";
 import { qubits, Qubit } from "./qubit.js";
 import { pairs, Pair } from "./pair.js";
 import { gateTiles, createGateTiles } from "./gateTile.js"
@@ -55,6 +55,7 @@ function createQubitsAndPairs(qubitCount) {
 
 let animating = false; // whether needeed to requestAnimationFrame, saving frame drawing
 let needAnimating = false;
+resize();
 
 function animate() {
 	needAnimating = false;
