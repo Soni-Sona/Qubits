@@ -1,7 +1,12 @@
 import { ctx } from "./canvas.js";
 
 let qubitDiameter = 100; // in pixels
-let qubitNameSize = 20;
+let qubitNameSize = 30;
+let colorStroke = "#fff";
+let colorZero = "#ddd";
+let colorOne  = "#aaf";
+let colorNone = "#777";
+let nameOpacity = 0.2;
 
 export let qubits = [];
 
@@ -11,6 +16,7 @@ export class Qubit {
 		this.name = String.fromCharCode(97 + index);
 		this.posX = posX;
 		this.posY = posY;
+		this.probability = 0.0; // number or null
 	}
 
 
@@ -20,17 +26,45 @@ export class Qubit {
 
 
 	draw() {
-		ctx.strokeStyle = "white";
-		ctx.fillStyle = "#88f";
+		ctx.save()
 		ctx.beginPath();
 		ctx.arc(this.posX, this.posY, qubitDiameter / 2, 0, 2 * Math.PI);
-		ctx.fill();
+		ctx.clip();
+
+		// background color
+		ctx.fillStyle = (this.probability === null) ? colorNone : colorZero
+		ctx.fillRect(
+			this.posX - qubitDiameter / 2,
+			this.posY - qubitDiameter / 2,
+			qubitDiameter,
+			qubitDiameter
+		);
+
+		// probability
+		if (this.probability !== null) {
+			ctx.fillStyle = colorOne;
+			ctx.fillRect(
+				this.posX - qubitDiameter / 2,
+				this.posY + qubitDiameter / 2,
+				qubitDiameter,
+				- this.probability * qubitDiameter
+			);
+		}
+
+		ctx.restore(); // remove clip
+
+		// stroke
+		ctx.strokeStyle = colorStroke;
+		ctx.beginPath();
+		ctx.arc(this.posX, this.posY, qubitDiameter / 2, 0, 2 * Math.PI);
 		ctx.stroke();
 
 		// name
 		ctx.font = qubitNameSize + "px sans-serif";
 		ctx.fillStyle = "black";
+		ctx.globalAlpha = nameOpacity;
 		ctx.fillText(this.name, this.posX, this.posY);
+		ctx.globalAlpha = 1;
 	}
 
 	isInside(x, y) {
