@@ -1,7 +1,16 @@
+import { qubits as physicalQubits } from "../index.js";
 import { canvas } from "./canvas.js";
 import { triggerAnimation } from "./playground.js";
-import { qubits, Qubit } from "./qubit.js";
-import { showPairsFromQubit, hideAllPairs } from "./pair.js"
+import {
+	qubits,
+	Qubit,
+	updateProbabilities as updateGraphicalQubitProbabilities
+} from "./qubit.js";
+import {
+	highlightPairsFromQubit,
+	unhighlightAllPairs,
+	showPairBetweenQubits
+} from "./pair.js"
 import { gateTiles, GateTile, createDraggedTile, removeDraggedTile } from "./gateTile.js"
 import * as gates from "../gates.js";
 export default null;
@@ -14,6 +23,7 @@ let gatesOnTwoQubits = [
 
 
 let draggedGateTile = null;
+let currentGate = null;
 let selectedQubits = [];
 let currentTouchId = null;
 
@@ -63,17 +73,24 @@ function touchStart(event) {
 					case "none":
 						console.log("Clicked on " + closest.name);
 						// TODO
+						updateGraphicalQubitProbabilities();
 
 						break;
 
 					case "waitingQubit2":
 						if (selectedQubits.includes(closest)) break; // qubit already selected
+						selectedQubits.push(closest);
 						console.log("Clicked on 2nd qubit " + closest.name);
-						// TODO
-
-						hideAllPairs();
-						triggerAnimation();
+						// physicalQubits.applyGate(
+						// 	currentGate(...selectedQubits)
+						// );
+						updateGraphicalQubitProbabilities();
+						unhighlightAllPairs();
+						showPairBetweenQubits(...selectedQubits);
 						state = "none";
+						draggedGateTile = null;
+						currentGate = null;
+						selectedQubits = [];
 						break;
 				}
 
@@ -81,6 +98,7 @@ function touchStart(event) {
 				switch (state) {
 					case "none":
 						draggedGateTile = createDraggedTile(closest, x, y);
+						currentGate = draggedGateTile.gate;
 						currentTouchId = id;
 
 						state = "draggingGateTile";
@@ -137,15 +155,19 @@ function touchEnd(event) {
 						console.log("Waiting 2nd qubit")
 						selectedQubits = [closest];
 
-						showPairsFromQubit(closest);
+						highlightPairsFromQubit(closest);
 						state = "waitingQubit2";
 
-					} else {
+					} else { // gate acting on single qubit
+						// physicalQubits.applyGate(currentGate(closest.index));
+						updateGraphicalQubitProbabilities();
+						currentGate = null;
 						state = "none";
 					}
 
 				} else { // not dropped on qubit
 					console.log(draggedGateTile.name + " dropped on nothing");
+					currentGate = null;
 					state = "none";
 				}
 

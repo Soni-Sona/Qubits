@@ -1,4 +1,6 @@
+import { qubits as physicalQubits } from "../index.js";
 import { ctx } from "./canvas.js";
+import { triggerAnimation } from "./playground.js";
 
 let qubitDiameter = 100; // in pixels
 let qubitNameSize = 30;
@@ -8,11 +10,12 @@ let colorOne  = "#aaf";
 let colorNone = "#777";
 let nameOpacity = 0.2;
 
-export let qubits = [];
+export let qubits = []; // list of graphical qubits
 
 
 export class Qubit {
 	constructor(index, posX, posY) {
+		this.index = index;
 		this.name = String.fromCharCode(97 + index);
 		this.posX = posX;
 		this.posY = posY;
@@ -73,5 +76,20 @@ export class Qubit {
 		let distanceSquared = dx**2 + dy**2;
 		return distanceSquared <= (qubitDiameter / 2)**2;
 	}
+}
+
+
+export function updateProbabilities() {
+	for (let i = 0; i < qubits.length; i++) {
+		let qubit = qubits[i];
+
+		if (!physicalQubits.correlated[i]) { // independent qubit, has own probability
+			qubit.probability = physicalQubits.probabilities[i];
+		} else {
+			qubit.probability = null;
+		}
+	}
+
+	triggerAnimation();
 }
 
