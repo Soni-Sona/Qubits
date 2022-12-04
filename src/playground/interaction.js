@@ -73,7 +73,7 @@ function touchStart(event) {
 				switch (state) {
 					case "none":
 						console.log("Clicked on " + closest.name);
-						// TODO
+						physicalQubits.observeState(closest.index);
 						updateGraphicalQubitProbabilities();
 
 						break;
