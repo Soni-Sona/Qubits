@@ -43,7 +43,7 @@ let state = "none";
 
 let savedPhysicalQubits;
 let undoCount = 0;
-let maxUndoCount = 4;
+let maxUndoCount = Infinity;
 
 function savePhysicalQubits() {
 	savedPhysicalQubits = physicalQubits.copy();

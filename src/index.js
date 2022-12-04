@@ -25,7 +25,7 @@ function loadSlide(slideId) {
 
 	measurementStep = slide.measurementStep;
 
-	document.getElementById("levelText").innerText = slide.text;
+	document.getElementById("levelText").innerHTML = slide.text;
 	document.getElementById("undoRedo").style.display = "none";
 	document.getElementById("simulate").style.display = "none";
 	document.getElementById("histogram").style.display = measurementStep === "none" ? "none" : "initial";
