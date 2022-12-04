@@ -14,7 +14,7 @@ function initializeLevel(qubitCount, availableGates) {
 	initializeHistogram();
 }
 
-initializeLevel(4, [
+initializeLevel(3, [
 	gates.gateX,
 	gates.gateH,
 	gates.gateT,

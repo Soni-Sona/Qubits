@@ -40,38 +40,54 @@ export function triggerAnimation() {
 
 function update() {
 	for (let i = 0; i < histogram.length; i++) {
-		histogram[i] = qubits.getStateProbability(i.toString(2).padStart(4, "0"));
+		histogram[i] = qubits.getStateProbability(i.toString(2).padStart(qubits.qubitCount, "0"));
 	}
-	console.log(histogram)
 }
 
 
 function draw() {
 	ctx.clearRect(0, 0, ctx.width, ctx.height);
 
-	let nonZeroCount = 0;
-	for (let i = 0; i < histogram.length; i++) {
-		if (histogram[i] > epsilon) nonZeroCount ++;
-	}
-
-	let barHorizontalSpace = ctx.width / nonZeroCount;
+	let barHorizontalSpace = ctx.width / histogram.length;
 	let labelSize = Math.min(barHorizontalSpace, labelSizeMax);
 
-	if (nonZeroCount > 0) {
-		// bars
-		let currentBar = 0;
-		ctx.fillStyle = colorOne;
-		for (let i = 0; i < histogram.length; i++) {
-			if (histogram[i] <= epsilon) continue;
+	// bars
+	ctx.fillStyle = colorOne;
+	for (let i = 0; i < histogram.length; i++) {
+		if (histogram[i] <= epsilon) continue;
 
-			ctx.fillRect(
-				(currentBar + 0.5 - barWidthRatio / 2) * barHorizontalSpace,
-				ctx.height - labelSize,
-				barHorizontalSpace * barWidthRatio,
-				-(ctx.height - labelSize) * histogram[i]
+		ctx.fillRect(
+			(i + 0.5 - barWidthRatio / 2) * barHorizontalSpace,
+			ctx.height - labelSize,
+			barHorizontalSpace * barWidthRatio,
+			-(ctx.height - labelSize) * histogram[i]
+		);
+	}
+
+	// labels
+	let labelCircleRadius = (qubits.qubitCount == 1) ?
+		0 : labelSize / 4;
+	let labelDotRadius = (qubits.qubitCount == 1) ? labelSize / 4 :
+		(qubits.qubitCount == 2) ? labelCircleRadius :
+		2.7 * labelCircleRadius / qubits.qubitCount;
+
+	let startAngle = -2 * Math.PI * (qubits.qubitCount == 2 ? 0.5 : 0.25);
+
+	for (let i = 0; i < histogram.length; i++) {
+		let centerX = (i + 0.5) * barHorizontalSpace;
+		let centerY = ctx.height - labelSize / 2;
+
+		for (let j = 0; j < qubits.qubitCount; j++) {
+			ctx.fillStyle = (i & 2**j) ? colorOne : colorZero;
+			ctx.beginPath();
+			ctx.arc(
+				centerX + labelCircleRadius * Math.cos(startAngle - 2 * Math.PI * j / qubits.qubitCount),
+				centerY + labelCircleRadius * Math.sin(startAngle - 2 * Math.PI * j / qubits.qubitCount),
+				labelDotRadius,
+				0,
+				2 * Math.PI
 			);
-
-			currentBar ++;
+			ctx.fill();
 		}
 	}
 
