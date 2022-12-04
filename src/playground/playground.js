@@ -1,14 +1,10 @@
 import { ctx } from "./canvas.js";
-import { Qubit } from "./qubit.js";
-import { Pair } from "./pair.js";
-import { createGateTiles, drawGateTiles } from "./gateTile.js"
+import { qubits, Qubit } from "./qubit.js";
+import { pairs, Pair } from "./pair.js";
+import { gateTiles, createGateTiles } from "./gateTile.js"
 
 
 const qubitCenterDistance = 200;
-
-
-let qubits = [];
-let pairs = [];
 
 
 export function initializeLevel(qubitCount, availableGates) {
@@ -19,8 +15,8 @@ export function initializeLevel(qubitCount, availableGates) {
 
 
 function createQubitsAndPairs(qubitCount) {
-	qubits = [];
-	pairs = [];
+	qubits.length = 0
+	pairs.length = 0;
 
 	let centerX = ctx.width  / 2;
 	let centerY = ctx.height / 2;
@@ -28,26 +24,22 @@ function createQubitsAndPairs(qubitCount) {
 
 	if (qubitCount == 1) {
 		// centered
-		qubits.push(new Qubit(1, centerX, centerY));
+		qubits.push(new Qubit(0, centerX, centerY));
 
 	} else {
 		// qubits arranged on a circle of diameter qubitCircleRadius
-		// if qubitCount even and > 2, arrange on a polygon of qubitCount + 1
-		let addEmptySlot = (qubitCount % 2 == 0 && qubitCount > 2);
-		let slotCount = addEmptySlot ? qubitCount + 1 : qubitCount;
 
-		let qubitCircleRadius = (slotCount == 2) ?
+		let qubitCircleRadius = (qubitCount == 2) ?
 			qubitCenterDistance / 2 :
-			slotCount * qubitCenterDistance / (2 * Math.PI);
+			qubitCount * qubitCenterDistance / (2 * Math.PI);
 
-		let startAngle = 2 * Math.PI *
-			(-0.25 - (addEmptySlot ? 1 / slotCount : 0) - (qubitCount == 2 ? 0.25 : 0));
+		let startAngle = -2 * Math.PI * (qubitCount == 2 ? 0.5 : 0.25);
 
 		for (let i = 0; i < qubitCount; i++) {
 			qubits.push(new Qubit(
-				i + 1,
-				centerX + qubitCircleRadius * Math.cos(startAngle - 2 * Math.PI * i / slotCount),
-				centerY + qubitCircleRadius * Math.sin(startAngle - 2 * Math.PI * i / slotCount)
+				i,
+				centerX + qubitCircleRadius * Math.cos(startAngle - 2 * Math.PI * i / qubitCount),
+				centerY + qubitCircleRadius * Math.sin(startAngle - 2 * Math.PI * i / qubitCount)
 			));
 		}
 
@@ -61,19 +53,63 @@ function createQubitsAndPairs(qubitCount) {
 }
 
 
+let animating = false; // whether needeed to requestAnimationFrame, saving frame drawing
+let needAnimating = false;
+
+function animate() {
+	needAnimating = false;
+
+	update();
+	draw();
+
+	animating = needAnimating;
+	if (animating) { ctx.fillStyle="white"; ctx.fillRect(0, 0, 10, 10); } // debug
+	if (animating) requestAnimationFrame(animate);
+}
+
+export function triggerAnimation() {
+	if (animating) {
+		needAnimating = true; // request to keep going
+	} else {
+		animating = true;
+		animate();
+	}
+}
+
+
+function update() {
+	for (let pair of pairs) {
+		pair.update();
+	}
+
+	for (let qubit of qubits) {
+		qubit.update();
+	}
+}
+
+
 function draw() {
 	ctx.clearRect(0, 0, ctx.width, ctx.height);
 
-	ctx.setLineDash([3, 3]);
+	// pairs
+	ctx.setLineDash([5, 5]);
 	for (let pair of pairs) {
 		pair.draw();
 	}
 
+	// qubits
 	ctx.setLineDash([]);
+	ctx.textBaseline = "middle";
+	ctx.textAlign = "center";
 	for (let qubit of qubits) {
 		qubit.draw();
 	}
 
-	drawGateTiles();
+	// gateTiles
+	ctx.textBaseline = "middle";
+	ctx.textAlign = "center";
+	for (let gateTile of gateTiles) {
+		gateTile.draw();
+	}
 }
 
