@@ -64,15 +64,17 @@ function dualQubitGate(matrix1, matrix2, qubitIndex1,
 	if(qubitCount >= 2 && matrix1 instanceof Matrix
 	       && matrix2 instanceof Matrix) {
 		if(qubitIndex1 < qubitIndex2) {
-			let result1 = singleQubitGate(matrix2, 0, qubitCount - qubitIndex2)
-			let result2 = singleQubitGate(matrix1, qubitIndex1, qubitIndex1+1)
+			let result1 = singleQubitGate(matrix1, qubitIndex1, qubitIndex1+1)
+			let result2 = singleQubitGate(matrix2, qubitIndex2-qubitIndex1-1,
+				                                   qubitCount-qubitIndex1-1)
 			let result  = result1.tensorProduct(result2)
 
 			return result
 		}
-		else if(qubitIndex2 > qubitIndex1) {
-			let result1 = singleQubitGate(matrix1, 0, qubitCount - qubitIndex1)
-			let result2 = singleQubitGate(matrix2, qubitIndex2, qubitIndex2+1)
+		else if(qubitIndex1 > qubitIndex2) {
+			let result1 = singleQubitGate(matrix2, qubitIndex2, qubitIndex2+1)
+			let result2 = singleQubitGate(matrix1, qubitIndex1-qubitIndex2-1,
+				                                   qubitCount-qubitIndex2-1)
 			let result  = result1.tensorProduct(result2)
 
 			return result
@@ -141,7 +143,7 @@ export function gateT(qubitIndex) {
 	return createMatrix;
 }
 
-function gateCU(qubitIndex1, qubitIndex2, qubitCount, matrix)
+export function gateCU(qubitIndex1, qubitIndex2, qubitCount, matrix)
 {
 	if(matrix instanceof Matrix && matrix.rows == 2 && matrix.columns == 2) {
 		let mat1 = dualQubitGate(BaseMatrix00, IBaseMatrix,
