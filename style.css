@@ -11,13 +11,23 @@ body {
 }
 
 
+#histogram, #qsphere {
+	position: absolute;
+	bottom: 20vh;
+	height: min(20vw, 20vh);
+	width: min(20vw, 20vh);
+	z-index: 1;
+}
+
+
 #histogram {
-	background-color: #eef;
+	right: min(20vw, 20vh);
 }
 
 
 #qsphere {
 	background-color: #efe;
+	right: 0;
 }
 
 
