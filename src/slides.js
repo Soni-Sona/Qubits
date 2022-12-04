@@ -2,10 +2,11 @@ import * as gates from "./gates.js"
 
 
 class Slide {
-	constructor(text, qubitCount, availableGates, reset) {
+	constructor(text, qubitCount, availableGates, showSimulateMany, reset) {
 		this.text = text;
 		this.qubitCount = qubitCount;
 		this.availableGates = availableGates;
+		this.showSimulateMany = showSimulateMany;
 		this.reset = reset;
 	}
 }
@@ -16,6 +17,7 @@ export let slides = [
 		"Test",
 		1,
 		[gates.gateX],
+		false,
 		true
 	),
 
@@ -23,6 +25,7 @@ export let slides = [
 		"Coucou",
 		3,
 		[gates.gateX, gates.gateH, gates.gateT, gates.gateCNOT],
+		true,
 		true
 	),
 ];
