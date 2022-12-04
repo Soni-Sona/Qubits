@@ -16,7 +16,7 @@ let ZBaseMatrix = new Matrix(2,2,[[new Complex(1), new Complex(0)],
 	                              [new Complex(0), new Complex(-1)]])
 
 let norm = 0.5**0.5
-let HBaseMatrix = new Matrix(2,2[[new Complex(norm), new Complex(norm)],
+let HBaseMatrix = new Matrix(2,2,[[new Complex(norm), new Complex(norm)],
 	                             [new Complex(norm), new Complex(-norm)]])
 
 

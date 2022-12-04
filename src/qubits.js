@@ -28,7 +28,7 @@ export class Qubits {
 		for(let qubitIndex = 0; qubitIndex<this.qubitCount; qubitIndex++) {
 			let probability = 0
 			for(let i = 0; i<2**this.qubitCount; i++) {
-				if(i & 2**qubitIndex) {
+				if(i & 2**(this.qubitCount-qubitIndex-1)) {
 					probability += this.coefficients.data[i][0].getSquaredNorm()
 				}
 			}
