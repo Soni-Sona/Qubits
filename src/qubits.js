@@ -7,7 +7,7 @@ export class Qubits {
 		this.qubitCount = qubitCount;
 
 		this.coefficients = new Matrix(2**qubitCount, 1)
-		this.coefficients.data[1][0].real = 1;
+		this.coefficients.data[0][0].real = 1;
 
 		this.probabilities = new Float32Array(qubitCount)
 		this.correlated = new Array(qubitCount)

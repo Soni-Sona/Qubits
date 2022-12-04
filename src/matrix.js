@@ -52,7 +52,7 @@ export class Matrix {
 			for(let i = 0; i<this.rows; i++) {
 				for(let j = 0; j<matrix.columns; j++) {
 					for(let k = 0; k<matrix.rows; k++) {
-						result.data[i][j] = result.data[i][j].add(matrix.data[i][k].multiply(this.data[k][j]))
+						result.data[i][j] = result.data[i][j].add(this.data[i][k].multiply(matrix.data[k][j]))
 					}
 				}
 			}
