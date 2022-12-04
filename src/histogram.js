@@ -7,6 +7,7 @@ let labelSizeMax = 20;
 let barWidthRatio = 0.8; // ratio between barWidth and barHorizontalSpace
 let colorZero = "#ddd";
 let colorOne  = "#aaf";
+let animationStiffness = 0.1;
 
 export function resize() {
 	let scale = window.devicePixelRatio;
@@ -32,15 +33,36 @@ export function initializeHistogram() {
 }
 
 
-export function triggerAnimation() {
+let animating = false; // whether needeed to requestAnimationFrame, saving frame drawing
+let needAnimating = false;
+
+function animate() {
+	needAnimating = false;
+
 	update();
 	draw();
+
+	animating = needAnimating;
+	// if (animating) { ctx.fillStyle="white"; ctx.fillRect(0, 0, 10, 10); } // debug
+	if (animating) requestAnimationFrame(animate);
+}
+
+export function triggerAnimation() {
+	if (animating) {
+		needAnimating = true; // request to keep going
+	} else {
+		animating = true;
+		animate();
+	}
 }
 
 
 function update() {
 	for (let i = 0; i < histogram.length; i++) {
-		histogram[i] = qubits.getStateProbability(i.toString(2).padStart(qubits.qubitCount, "0"));
+		let target = qubits.getStateProbability(i.toString(2).padStart(qubits.qubitCount, "0"));
+		let diff = target - histogram[i];
+		if (diff > epsilon || diff < -epsilon) needAnimating = true;
+		histogram[i] += animationStiffness * diff;
 	}
 }
 
