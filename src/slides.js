@@ -231,7 +231,23 @@ export let slides = [
 
 	new Slide(
 		"You reached the end of this presentation. Feel free to play with these qubits and become a master of the quantum world.",
+		3,
+		[gates.gateX, gates.gateH, gates.gateT, gates.gateCNOT],
+		"histogram",
+		false
+	),
+
+	new Slide(
+		"",
 		4,
+		[gates.gateX, gates.gateH, gates.gateT, gates.gateCNOT],
+		"histogram",
+		false
+	),
+
+	new Slide(
+		"",
+		5,
 		[gates.gateX, gates.gateH, gates.gateT, gates.gateCNOT],
 		"histogram",
 		false
